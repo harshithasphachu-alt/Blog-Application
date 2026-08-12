@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BlogApp</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="logo">✍️ BlogApp</div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#" onclick="showPage('home')">Home</a></li>
+      <li><a href="#" onclick="showPage('dashboard')" id="dashNav" style="display:none">Dashboard</a></li>
+      <li><a href="#" onclick="showPage('login')" id="loginNav">Login</a></li>
+      <li><a href="#" onclick="showPage('register')" id="registerNav">Register</a></li>
+      <li><a href="#" onclick="logout()" id="logoutNav" style="display:none">Logout</a></li>
+    </ul>
+    <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
+  </nav>
+
+  <!-- HOME PAGE -->
+  <div id="home" class="page active">
+    <section class="hero">
+      <h1>Welcome to <span>BlogApp</span></h1>
+      <p>Discover stories, ideas, and perspectives from writers on any topic.</p>
+      <button class="btn" onclick="showPage('register')">Start Writing</button>
+    </section>
+
+    <section class="blog-section">
+      <h2>Latest Posts</h2>
+      <div class="blog-grid" id="blogGrid">
+        <!-- Posts injected by JS -->
+      </div>
+    </section>
+  </div>
+
+  <!-- LOGIN PAGE -->
+  <div id="login" class="page">
+    <div class="form-container">
+      <h2>Login</h2>
+      <p class="form-sub">Welcome back! Please login to your account.</p>
+      <form onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="loginEmail" placeholder="Enter your email" required />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPassword" placeholder="Enter your password" required />
+        </div>
+        <div id="loginError" class="error-msg"></div>
+        <button type="submit" class="btn full-btn">Login</button>
+      </form>
+      <p class="switch-text">Don't have an account? <a href="#" onclick="showPage('register')">Register</a></p>
+    </div>
+  </div>
+
+  <!-- REGISTER PAGE -->
+  <div id="register" class="page">
+    <div class="form-container">
+      <h2>Create Account</h2>
+      <p class="form-sub">Join thousands of writers today.</p>
+      <form onsubmit="handleRegister(event)">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="regName" placeholder="Enter your name" required />
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="regEmail" placeholder="Enter your email" required />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="regPassword" placeholder="Create a password" required />
+        </div>
+        <div id="regError" class="error-msg"></div>
+        <div id="regSuccess" class="success-msg"></div>
+        <button type="submit" class="btn full-btn">Register</button>
+      </form>
+      <p class="switch-text">Already have an account? <a href="#" onclick="showPage('login')">Login</a></p>
+    </div>
+  </div>
+
+  <!-- DASHBOARD PAGE -->
+  <div id="dashboard" class="page">
+    <div class="dashboard-header">
+      <div>
+        <h2>My Dashboard</h2>
+        <p id="welcomeUser">Welcome back!</p>
+      </div>
+      <button class="btn" onclick="showPage('createBlog')">+ New Post</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <h3 id="totalPosts">0</h3>
+        <p>Total Posts</p>
+      </div>
+      <div class="stat-card">
+        <h3 id="totalViews">0</h3>
+        <p>Total Views</p>
+      </div>
+      <div class="stat-card">
+        <h3>Active</h3>
+        <p>Account Status</p>
+      </div>
+    </div>
+
+    <h3 style="margin: 2rem 0 1rem;">My Posts</h3>
+    <div id="myPosts" class="blog-grid">
+      <!-- User posts injected here -->
+    </div>
+  </div>
+
+  <!-- CREATE BLOG PAGE -->
+  <div id="createBlog" class="page">
+    <div class="create-container">
+      <h2>Create New Blog Post</h2>
+      <form onsubmit="handleCreateBlog(event)">
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" id="blogTitle" placeholder="Enter an engaging title..." required />
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select id="blogCategory">
+            <option value="Technology">Technology</option>
+            <option value="Lifestyle">Lifestyle</option>
+            <option value="Travel">Travel</option>
+            <option value="Health">Health</option>
+            <option value="Education">Education</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Cover Image URL <span class="optional">(optional)</span></label>
+          <input type="url" id="blogImage" placeholder="https://example.com/image.jpg" />
+        </div>
+        <div class="form-group">
+          <label>Content</label>
+          <textarea id="blogContent" rows="10" placeholder="Write your blog post here..." required></textarea>
+        </div>
+        <div id="blogSuccess" class="success-msg"></div>
+        <div class="form-actions">
+          <button type="button" class="btn outline-btn" onclick="showPage('dashboard')">Cancel</button>
+          <button type="submit" class="btn">Publish Post</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- BLOG DETAIL MODAL -->
+  <div id="blogModal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <img id="modalImg" src="" alt="" />
+      <div class="modal-meta" id="modalMeta"></div>
+      <h2 id="modalTitle"></h2>
+      <p id="modalBody"></p>
+    </div>
+  </div>
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal()"></div>
+
+  <footer>
+    <p>© 2026 BlogApp. Built with ❤️ using HTML, CSS & JavaScript.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
