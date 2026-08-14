@@ -1,0 +1,42 @@
+require("dotenv").config();
+
+const express = require("express");
+const cors = require("cors");
+
+const connectDB = require("./db");
+const postRoutes = require("./routes/postRoutes");
+
+const app = express();
+
+const PORT = process.env.PORT || 5000;
+
+// Connect to MongoDB
+connectDB();
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// Test route
+app.get("/", (req, res) => {
+    res.json({
+        message: "Blog Platform Backend is running!"
+    });
+});
+
+// Register route for frontend testing
+app.post("/api/register", (req, res) => {
+    const { username } = req.body;
+
+    res.json({
+        message: `User ${username} registered successfully!`
+    });
+});
+
+// Blog routes
+app.use("/api/blogs", postRoutes);
+
+// Start server
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
